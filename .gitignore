@@ -1,0 +1,29 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Python (build.py)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Éditeurs
+.vscode/
+.idea/
+*.swp
+*~
+
+# Environnement / secrets
+.env
+.env.*
+
+# Logs et fichiers temporaires
+*.log
+tmp/
+.cache/
+
+# Claude Code (réglages locaux)
+.claude/settings.local.json

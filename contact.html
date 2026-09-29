@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr" class="no-js">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact | WineShare</title>
+  <meta name="description" content="Une question sur l&#x27;application WineShare, un partenariat ou une demande presse ? Contactez l&#x27;équipe WineShare." />
+  <link rel="canonical" href="https://wineshare.fr/contact.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Contact | WineShare" />
+  <meta property="og:description" content="Une question sur l&#x27;application WineShare, un partenariat ou une demande presse ? Contactez l&#x27;équipe WineShare." />
+  <meta property="og:image" content="https://wineshare.fr/assets/video/poster.jpg" />
+  <meta name="theme-color" content="#476525" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg" />
+  <link rel="apple-touch-icon" href="assets/favicon/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/site.css" />
+  <script src="assets/js/config.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html" aria-label="WineShare, accueil">
+        <img src="assets/svg/logo-wineshare.svg" alt="" width="56" height="42" />
+        <span>WineShare</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
+      <nav class="nav" id="nav" aria-label="Navigation principale">
+        <a href="index.html">Accueil</a>
+        <a href="etablissements.html">Établissements</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html" aria-current="page">Contact</a>
+        <a class="btn btn--primary" href="index.html#telecharger">Télécharger l'app</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="page-hero" style="padding-bottom:2.5rem">
+      <div class="container">
+        <p class="eyebrow reveal">Contact</p>
+        <h1 class="reveal d1">Parlons <span class="accent">vin</span></h1>
+        <p class="lead reveal d2">Une question sur l'application, un projet de partenariat ou une demande presse ? Écrivez-nous, nous vous répondons rapidement.</p>
+      </div>
+    </section>
+    <section style="padding-bottom:var(--section)">
+      <div class="container contact-layout">
+        <form class="form-card reveal" id="contact-form" novalidate>
+          <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="name">Nom et prénom</label>
+              <input id="name" name="name" type="text" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="profile">Vous êtes</label>
+              <select id="profile" name="profile">
+                <option value="amateur">Un amateur de vin</option>
+                <option value="etablissement">Un établissement (bar à vin, caviste…)</option>
+                <option value="vigneron">Un vigneron / domaine</option>
+                <option value="presse">Presse / partenariat</option>
+                <option value="autre">Autre</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="subject">Sujet</label>
+              <input id="subject" name="subject" type="text" />
+            </div>
+            <div class="field field--full">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" required></textarea>
+            </div>
+          </div>
+          <div class="form-actions">
+            <div class="g-recaptcha" data-sitekey="6LccDaktAAAAAMwzB02Z31HxSoGSXZ9-36iWA5F_"></div>
+            <button class="btn btn--primary" type="submit">Envoyer le message</button>
+          </div>
+        </form>
+        <aside class="contact-aside">
+          <div class="info-card reveal d1">
+            <h3>Questions fréquentes</h3>
+            <p>La réponse à votre question s'y trouve peut-être déjà.</p>
+            <a class="link" href="index.html#faq">Voir la FAQ →</a>
+          </div>
+          <div class="info-card info-card--green reveal d2">
+            <h3>Vous êtes un établissement ?</h3>
+            <p>Découvrez WineShare Pro, l'application dédiée aux bars à vin et cavistes.</p>
+            <a class="btn btn--light" href="etablissements.html">WineShare Pro →</a>
+          </div>
+          <div class="info-card reveal d3">
+            <h3>Supprimer mon compte</h3>
+            <p>Vous souhaitez supprimer votre compte et vos données ?</p>
+            <a class="link" href="delete-account.html">Faire la demande →</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container top">
+      <div>
+        <a class="brand" href="index.html">
+          <img src="assets/svg/logo-white.svg" alt="" width="56" height="42" />
+          <span>WineShare</span>
+        </a>
+        <p>Le réseau social des passionnés de vin. Pensé avec des sommeliers et des cavistes indépendants.</p>
+      </div>
+      <div>
+        <h4>Le site</h4>
+        <ul>
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="etablissements.html">Établissements</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="index.html#faq">Questions fréquentes</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>L'application</h4>
+        <ul>
+          <li><a data-store="appstore" href="#">App Store</a></li>
+          <li><a data-store="googleplay" href="#">Google Play</a></li>
+          <li><a href="pre-inscription.html">Pré-inscription</a></li>
+          <li><a href="etablissements.html">WineShare Pro</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Aide</h4>
+        <ul>
+          <li><a href="contact.html">Contactez-nous</a></li>
+          <li><a href="delete-account.html">Supprimer mon compte</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container bottom">
+      <span>© 2026 WineShare. L'abus d'alcool est dangereux pour la santé, à consommer avec modération.</span>
+      <ul>
+        <li><a href="mention.html">Mentions légales</a></li>
+        <li><a href="confidentiality.html">Confidentialité</a></li>
+        <li><a href="cgvu.html">CGV</a></li>
+      </ul>
+    </div>
+  </footer>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
