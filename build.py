@@ -14,6 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).parent
 SITE_URL = "https://wineshare.fr"
 GTM_ID = "GTM-W83MHBGP"  # Google Tag Manager
+GA_ID = "G-KX7C8L15GM"   # Google Analytics (gtag.js)
 
 # Catégorie + couleur de couverture de chaque article, dans l'ordre du document
 ARTICLE_META = [
@@ -52,6 +53,15 @@ def head(title, description, root, canonical):
     return f"""<!DOCTYPE html>
 <html lang="fr" class="no-js">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={GA_ID}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){{dataLayer.push(arguments);}}
+    gtag('js', new Date());
+
+    gtag('config', '{GA_ID}');
+  </script>
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){{w[l]=w[l]||[];w[l].push({{'gtm.start':
   new Date().getTime(),event:'gtm.js'}});var f=d.getElementsByTagName(s)[0],
