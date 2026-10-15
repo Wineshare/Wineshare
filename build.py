@@ -48,7 +48,7 @@ def slugify(text):
 
 # ---------------------------------------------------------------- Gabarits
 
-def head(title, description, root, canonical):
+def head(title, description, root, canonical, image="assets/video/poster.jpg"):
     return f"""<!DOCTYPE html>
 <html lang="fr" class="no-js">
 <head>
@@ -69,7 +69,7 @@ def head(title, description, root, canonical):
   <meta property="og:type" content="website" />
   <meta property="og:title" content="{e(title)}" />
   <meta property="og:description" content="{e(description)}" />
-  <meta property="og:image" content="{SITE_URL}/assets/video/poster.jpg" />
+  <meta property="og:image" content="{SITE_URL}/{image}" />
   <meta name="theme-color" content="#476525" />
   <link rel="icon" type="image/svg+xml" href="{root}assets/favicon/favicon.svg" />
   <link rel="apple-touch-icon" href="{root}assets/favicon/apple-touch-icon.png" />
@@ -219,7 +219,20 @@ def parse_articles():
     return articles
 
 
+def cover_image(a):
+    """Photo de couverture : assets/img/blog/<slug>.webp (sinon, couverture colorée)."""
+    path = f"assets/img/blog/{a['slug']}.webp"
+    return path if (ROOT / path).exists() else None
+
+
 def cover_html(a, root):
+    img = cover_image(a)
+    if img:
+        return f"""<div class="cover cover--photo">
+            <img class="cover-img" src="{root}{img}" alt="{e(a['title'])}" loading="lazy" />
+            <img class="cover-mark" src="{root}assets/svg/logo-white.svg" alt="" />
+            <span class="cover-title">{CATEGORIES[a['cat']]}</span>
+          </div>"""
     return f"""<div class="cover {a['cover']}">
             <img class="cover-mark" src="{root}assets/svg/logo-white.svg" alt="" />
             <span class="cover-num">{a['n']:02d}</span>
@@ -261,7 +274,8 @@ def render_article(a, articles):
     related = "\n".join(card_html(o, root) for o in others[:3])
     desc = a["excerpt"][:155]
     return (
-        head(f"{a['title']} | Blog WineShare", desc, root, f"blog/{a['slug']}.html")
+        head(f"{a['title']} | Blog WineShare", desc, root, f"blog/{a['slug']}.html",
+             cover_image(a) or "assets/video/poster.jpg")
         + header(root, "blog")
         + f"""  <main>
     <section class="article-hero">
