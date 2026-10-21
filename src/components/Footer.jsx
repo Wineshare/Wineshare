@@ -26,7 +26,6 @@ export default function Footer() {
           <ul>
             <li><StoreLink store="appstore">App Store</StoreLink></li>
             <li><StoreLink store="googleplay">Google Play</StoreLink></li>
-            <li><a href="/pre-inscription.html">Pré-inscription</a></li>
             <li><Link to="/etablissements">WineShare Pro</Link></li>
           </ul>
         </div>
