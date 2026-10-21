@@ -1,4 +1,5 @@
 import { config } from "../config.js";
+import { trackStoreClick } from "../analytics.js";
 
 const STORE_URLS = {
   "appstore": config.appstoreURL,
@@ -8,7 +9,11 @@ const STORE_URLS = {
 };
 
 export function StoreLink({ store, children }) {
-  return <a href={STORE_URLS[store]} target="_blank" rel="noopener">{children}</a>;
+  return (
+    <a href={STORE_URLS[store]} target="_blank" rel="noopener" onClick={() => trackStoreClick(store)}>
+      {children}
+    </a>
+  );
 }
 
 export default function Stores({ pro = false }) {

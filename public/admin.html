@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Back-office WineShare</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <style>
+    /* Couleurs des graphiques validées (daltonisme, contraste) en clair et en sombre :
+       App Store = bleu, Google Play = vert. */
+    :root {
+      color-scheme: light;
+      --bg: #FFFCF7;
+      --surface: #ffffff;
+      --line: rgba(2, 19, 43, 0.09);
+      --grid: rgba(2, 19, 43, 0.07);
+      --ink: #02132B;
+      --text: #414e60;
+      --muted: #6b7686;
+      --brand: #476525;
+      --brand-soft: #eef0e4;
+      --series-visitors: #4a7d17;
+      --series-visitors-dim: #c9d8b5;
+      --series-appstore: #2a78d6;
+      --series-googleplay: #4a7d17;
+      --danger: #b3302b;
+      --shadow: 0 10px 30px -18px rgba(2, 19, 43, 0.3);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --bg: #12140f;
+        --surface: #1b1d17;
+        --line: rgba(255, 255, 255, 0.09);
+        --grid: rgba(255, 255, 255, 0.07);
+        --ink: #f0efe9;
+        --text: #c8cabf;
+        --muted: #989b8e;
+        --brand: #8fbf5a;
+        --brand-soft: #263020;
+        --series-visitors: #5a9a2a;
+        --series-visitors-dim: #34452a;
+        --series-appstore: #3987e5;
+        --series-googleplay: #5a9a2a;
+        --danger: #e66767;
+        --shadow: none;
+      }
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #12140f; --surface: #1b1d17; --line: rgba(255,255,255,.09); --grid: rgba(255,255,255,.07);
+      --ink: #f0efe9; --text: #c8cabf; --muted: #989b8e; --brand: #8fbf5a; --brand-soft: #263020;
+      --series-visitors: #5a9a2a; --series-visitors-dim: #34452a; --series-appstore: #3987e5;
+      --series-googleplay: #5a9a2a; --danger: #e66767; --shadow: none;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+    h1, h2 { font-family: 'Merriweather Sans', 'Poppins', sans-serif; color: var(--ink); letter-spacing: -0.02em; }
+    h1 { font-size: 1.35rem; font-weight: 800; }
+    h2 { font-size: 1.02rem; font-weight: 700; }
+    button, input, select { font: inherit; color: inherit; }
+    [hidden] { display: none !important; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+    /* Connexion */
+    .login { min-height: 100vh; display: grid; place-items: center; padding: 16px; }
+    .login form { width: 100%; max-width: 380px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 2rem; box-shadow: var(--shadow); display: grid; gap: 1rem; }
+    .login img { width: 52px; }
+    .login label { font-weight: 500; color: var(--ink); font-size: .92rem; }
+    .login input { width: 100%; padding: .75rem .9rem; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); }
+    .error { color: var(--danger); font-size: .9rem; min-height: 1.3em; }
+
+    .btn { border: 0; border-radius: 999px; padding: .7rem 1.3rem; font-weight: 600; cursor: pointer; background: var(--brand); color: #fff; }
+    :root[data-theme="dark"] .btn:not(.btn--ghost) { color: #12140f; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn:not(.btn--ghost) { color: #12140f; } }
+    .btn--ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
+
+    /* En-tête */
+    .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+    .top .wrap { display: flex; align-items: center; gap: .9rem; padding-block: .8rem; flex-wrap: wrap; }
+    .top img { width: 38px; }
+    .top .title { flex: 1; min-width: 160px; }
+    .top .title p { font-size: .82rem; color: var(--muted); }
+    .top select { padding: .55rem .8rem; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); font-weight: 500; }
+
+    main { padding-block: 1.5rem 3rem; display: grid; gap: 1.2rem; }
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 1.2rem 1.3rem; box-shadow: var(--shadow); min-width: 0; }
+    .card header { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: .9rem; flex-wrap: wrap; }
+    .card header p { font-size: .82rem; color: var(--muted); }
+
+    /* Chiffres clés */
+    .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; }
+    .kpi .label { font-size: .85rem; color: var(--muted); display: flex; align-items: center; gap: .45rem; }
+    .kpi .dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+    .kpi .value { font-family: 'Merriweather Sans', sans-serif; font-weight: 800; font-size: 2rem; color: var(--ink); line-height: 1.2; margin: .25rem 0; font-variant-numeric: tabular-nums; }
+    .kpi .delta { font-size: .8rem; color: var(--muted); }
+    .kpi .delta b { color: var(--text); font-weight: 600; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+    .chart { position: relative; height: 260px; }
+
+    .legend { display: flex; gap: 1rem; font-size: .82rem; color: var(--text); flex-wrap: wrap; }
+    .legend span { display: inline-flex; align-items: center; gap: .4rem; }
+    .legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+    table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    th { text-align: left; font-weight: 500; color: var(--muted); font-size: .78rem; padding: .35rem 0; border-bottom: 1px solid var(--line); }
+    td { padding: .5rem 0; border-bottom: 1px solid var(--line); color: var(--text); }
+    td:not(:first-child), th:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; padding-left: .8rem; }
+    td:first-child { overflow-wrap: anywhere; color: var(--ink); }
+    tr:last-child td { border-bottom: 0; }
+    .empty { color: var(--muted); font-size: .88rem; padding: .5rem 0; }
+
+    details summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+    details table { margin-top: .8rem; }
+    .scroll-x { overflow-x: auto; }
+
+    .notice { background: var(--brand-soft); border-radius: 14px; padding: .9rem 1.1rem; font-size: .9rem; color: var(--text); }
+    .foot { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-size: .85rem; color: var(--muted); }
+    .foot label { display: inline-flex; align-items: center; gap: .5rem; cursor: pointer; color: var(--text); }
+
+    @media (max-width: 900px) {
+      .kpis { grid-template-columns: repeat(2, 1fr); }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 420px) {
+      .kpis { gap: .8rem; }
+      .kpi .value { font-size: 1.6rem; }
+      .card { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Connexion -->
+  <section class="login" id="login">
+    <form id="login-form">
+      <img src="/assets/favicon/favicon.svg" alt="" />
+      <h1>Back-office WineShare</h1>
+      <div>
+        <label for="password">Mot de passe</label>
+        <input id="password" type="password" autocomplete="current-password" required />
+      </div>
+      <p class="error" id="login-error" role="alert"></p>
+      <button class="btn" type="submit">Se connecter</button>
+    </form>
+  </section>
+
+  <!-- Tableau de bord -->
+  <div id="dash" hidden>
+    <div class="top">
+      <div class="wrap">
+        <img src="/assets/favicon/favicon.svg" alt="" />
+        <div class="title">
+          <h1>Statistiques du site</h1>
+          <p id="updated">Chargement…</p>
+        </div>
+        <select id="month" aria-label="Mois affiché"></select>
+        <button class="btn btn--ghost" id="logout" type="button">Déconnexion</button>
+      </div>
+    </div>
+
+    <main class="wrap">
+      <p class="notice" id="empty-notice" hidden>Pas encore de données pour ce mois : les visites et les clics sont comptés depuis la mise en ligne du suivi.</p>
+
+      <section class="kpis" aria-label="Chiffres clés du mois">
+        <div class="card kpi"><div class="label">Visiteurs</div><div class="value" id="k-visitors">–</div><div class="delta" id="d-visitors"></div></div>
+        <div class="card kpi"><div class="label">Pages vues</div><div class="value" id="k-pageviews">–</div><div class="delta" id="d-pageviews"></div></div>
+        <div class="card kpi"><div class="label"><i class="dot" style="background:var(--series-appstore)"></i>Clics App Store</div><div class="value" id="k-appstore">–</div><div class="delta" id="d-appstore"></div></div>
+        <div class="card kpi"><div class="label"><i class="dot" style="background:var(--series-googleplay)"></i>Clics Google Play</div><div class="value" id="k-googleplay">–</div><div class="delta" id="d-googleplay"></div></div>
+      </section>
+
+      <section class="card">
+        <header><h2 id="t-daily">Visiteurs par jour</h2><p>Survolez une barre pour le détail</p></header>
+        <div class="chart"><canvas id="c-daily" role="img" aria-label="Visiteurs par jour"></canvas></div>
+      </section>
+
+      <div class="grid-2">
+        <section class="card">
+          <header><h2>Visiteurs par mois</h2><p>12 derniers mois</p></header>
+          <div class="chart"><canvas id="c-monthly" role="img" aria-label="Visiteurs par mois"></canvas></div>
+        </section>
+        <section class="card">
+          <header>
+            <h2>Clics « Télécharger » par mois</h2>
+            <div class="legend"><span><i style="background:var(--series-appstore)"></i>App Store</span><span><i style="background:var(--series-googleplay)"></i>Google Play</span></div>
+          </header>
+          <div class="chart"><canvas id="c-clicks" role="img" aria-label="Clics sur les boutons App Store et Google Play par mois"></canvas></div>
+        </section>
+      </div>
+
+      <section class="card">
+        <header>
+          <h2 id="t-daily-clicks">Clics « Télécharger » par jour</h2>
+          <div class="legend"><span><i style="background:var(--series-appstore)"></i>App Store</span><span><i style="background:var(--series-googleplay)"></i>Google Play</span></div>
+        </header>
+        <div class="chart"><canvas id="c-daily-clicks" role="img" aria-label="Clics sur les boutons App Store et Google Play par jour"></canvas></div>
+      </section>
+
+      <div class="grid-3">
+        <section class="card">
+          <header><h2>Détail des clics</h2></header>
+          <table>
+            <thead><tr><th>Application</th><th>App Store</th><th>Google Play</th></tr></thead>
+            <tbody id="tb-clicks"></tbody>
+          </table>
+        </section>
+        <section class="card">
+          <header><h2>Pages les plus vues</h2></header>
+          <table><thead><tr><th>Page</th><th>Vues</th></tr></thead><tbody id="tb-pages"></tbody></table>
+        </section>
+        <section class="card">
+          <header><h2>D'où viennent les visiteurs</h2></header>
+          <table><thead><tr><th>Source</th><th>Visites</th></tr></thead><tbody id="tb-sources"></tbody></table>
+        </section>
+      </div>
+
+      <section class="card">
+        <details>
+          <summary>Tableau des 12 derniers mois</summary>
+          <div class="scroll-x">
+            <table>
+              <thead><tr><th>Mois</th><th>Visiteurs</th><th>Pages vues</th><th>App Store</th><th>Google Play</th></tr></thead>
+              <tbody id="tb-months"></tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+
+      <div class="foot">
+        <label><input type="checkbox" id="no-track" /> Ne pas compter mes propres visites sur cet appareil</label>
+        <span>Un visiteur est compté une fois par jour. Aucun cookie, aucune adresse IP stockée.</span>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const nf = new Intl.NumberFormat("fr-FR");
+    const SESSION_KEY = "ws_admin";
+    let password = "";
+    let data = null;
+    const charts = {};
+
+    // ---------- Connexion ----------
+    try { password = sessionStorage.getItem(SESSION_KEY) || ""; } catch {}
+
+    async function load(month) {
+      const url = "/api/admin/stats" + (month ? "?month=" + month : "");
+      const res = await fetch(url, { headers: { Authorization: "Bearer " + password } });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw Object.assign(new Error(body.error || "Erreur " + res.status), { status: res.status });
+      return body;
+    }
+
+    async function open(month) {
+      data = await load(month);
+      $("login").hidden = true;
+      $("dash").hidden = false;
+      render();
+    }
+
+    $("login-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      password = $("password").value;
+      $("login-error").textContent = "";
+      try {
+        await open();
+        try { sessionStorage.setItem(SESSION_KEY, password); } catch {}
+      } catch (err) {
+        $("login-error").textContent = err.message;
+      }
+    });
+
+    $("logout").addEventListener("click", () => {
+      try { sessionStorage.removeItem(SESSION_KEY); } catch {}
+      location.reload();
+    });
+
+    $("month").addEventListener("change", async (e) => {
+      $("updated").textContent = "Chargement…";
+      try { await open(e.target.value); } catch (err) { $("updated").textContent = err.message; }
+    });
+
+    if (password) open().catch(() => { password = ""; });
+
+    // ---------- Exclure ses propres visites ----------
+    try { $("no-track").checked = localStorage.getItem("ws_no_track") === "1"; } catch {}
+    $("no-track").addEventListener("change", (e) => {
+      try {
+        if (e.target.checked) localStorage.setItem("ws_no_track", "1");
+        else localStorage.removeItem("ws_no_track");
+      } catch {}
+    });
+
+    // ---------- Formats ----------
+    const monthName = (m, style = "long") => {
+      const [y, mo] = m.split("-").map(Number);
+      return new Date(y, mo - 1, 1).toLocaleDateString("fr-FR", { month: style, year: "numeric" });
+    };
+    const shortMonth = (m) => {
+      const [y, mo] = m.split("-").map(Number);
+      return new Date(y, mo - 1, 1).toLocaleDateString("fr-FR", { month: "short" }).replace(".", "");
+    };
+    const dayLabel = (d) => String(Number(d.slice(8)));
+    const longDay = (d) => new Date(d + "T12:00:00").toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+    const appstore = (c) => c.appstore + c["appstore-pro"];
+    const googleplay = (c) => c.googleplay + c["googleplay-pro"];
+    const pageName = (p) => {
+      const named = { "/": "Accueil", "/etablissements": "Établissements", "/blog": "Blog", "/contact": "Contact" }[p];
+      if (named) return named;
+      if (p.startsWith("/blog/")) {
+        const t = p.slice(6).replace(/-/g, " ");
+        return "Article : " + t.charAt(0).toUpperCase() + t.slice(1);
+      }
+      return p;
+    };
+
+    function delta(current, previous, prevMonth) {
+      if (!previous) return current ? "Nouveau ce mois-ci" : "";
+      const pct = Math.round(((current - previous) / previous) * 100);
+      const arrow = pct > 0 ? "▲" : pct < 0 ? "▼" : "=";
+      return `<b>${arrow} ${pct > 0 ? "+" : ""}${pct} %</b> vs ${monthName(prevMonth)}`;
+    }
+
+    // ---------- Graphiques ----------
+    const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+    function barChart(id, labels, datasets, { stacked = false, tooltipTitle, tooltipFooter } = {}) {
+      charts[id]?.destroy();
+      charts[id] = new Chart($(id), {
+        type: "bar",
+        data: {
+          labels,
+          datasets: datasets.map((d) => ({
+            borderRadius: { topLeft: 4, topRight: 4 },
+            borderSkipped: "bottom",
+            maxBarThickness: 28,
+            categoryPercentage: 0.75,
+            barPercentage: datasets.length > 1 && !stacked ? 0.9 : 0.85,
+            borderColor: css("--surface"),
+            borderWidth: stacked ? { top: 2 } : 0,
+            ...d,
+          })),
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 300 },
+          interaction: { mode: "index", intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: css("--surface"),
+              titleColor: css("--ink"),
+              bodyColor: css("--text"),
+              footerColor: css("--muted"),
+              borderColor: css("--line"),
+              borderWidth: 1,
+              padding: 10,
+              boxPadding: 4,
+              usePointStyle: true,
+              titleFont: { family: "Poppins", weight: "600" },
+              bodyFont: { family: "Poppins" },
+              footerFont: { family: "Poppins", weight: "400" },
+              callbacks: {
+                title: tooltipTitle ? (items) => tooltipTitle(items[0].dataIndex) : undefined,
+                label: (item) => ` ${item.dataset.label} : ${nf.format(item.raw)}`,
+                footer: tooltipFooter ? (items) => tooltipFooter(items[0].dataIndex) : undefined,
+              },
+            },
+          },
+          scales: {
+            x: {
+              stacked,
+              grid: { display: false },
+              border: { color: css("--line") },
+              ticks: { color: css("--muted"), font: { family: "Poppins", size: 11 }, autoSkip: true, maxRotation: 0 },
+            },
+            y: {
+              stacked,
+              beginAtZero: true,
+              grid: { color: css("--grid") },
+              border: { display: false },
+              ticks: { color: css("--muted"), font: { family: "Poppins", size: 11 }, precision: 0, maxTicksLimit: 5 },
+            },
+          },
+        },
+      });
+    }
+
+    function rows(tbody, list, empty) {
+      $(tbody).innerHTML = list.length
+        ? list.map((cells) => `<tr>${cells.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")
+        : `<tr><td class="empty" colspan="3">${empty}</td></tr>`;
+    }
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    // ---------- Affichage ----------
+    function render() {
+      const { month, months, days, pages, sources } = data;
+      const i = months.findIndex((m) => m.label === month);
+      const cur = months[i];
+      const prev = months[i - 1];
+
+      // Sélecteur de mois (le plus récent en premier)
+      $("month").innerHTML = [...months].reverse()
+        .map((m) => `<option value="${m.label}" ${m.label === month ? "selected" : ""}>${monthName(m.label)}</option>`).join("");
+      $("updated").textContent = "Mis à jour à " + new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+
+      // Chiffres clés
+      const kpis = {
+        visitors: [cur.visitors, prev?.visitors],
+        pageviews: [cur.pageviews, prev?.pageviews],
+        appstore: [appstore(cur.clicks), prev && appstore(prev.clicks)],
+        googleplay: [googleplay(cur.clicks), prev && googleplay(prev.clicks)],
+      };
+      for (const [k, [v, p]] of Object.entries(kpis)) {
+        $("k-" + k).textContent = nf.format(v);
+        $("d-" + k).innerHTML = prev ? delta(v, p, prev.label) : "";
+      }
+      $("empty-notice").hidden = cur.pageviews > 0 || appstore(cur.clicks) + googleplay(cur.clicks) > 0;
+
+      // Visiteurs par jour
+      $("t-daily").textContent = "Visiteurs par jour, " + monthName(month);
+      barChart("c-daily", days.map((d) => dayLabel(d.label)), [
+        { label: "Visiteurs", data: days.map((d) => d.visitors), backgroundColor: css("--series-visitors") },
+      ], {
+        tooltipTitle: (j) => longDay(days[j].label),
+        tooltipFooter: (j) => nf.format(days[j].pageviews) + " pages vues",
+      });
+
+      // Visiteurs par mois : le mois affiché est en couleur pleine
+      barChart("c-monthly", months.map((m) => shortMonth(m.label)), [
+        {
+          label: "Visiteurs",
+          data: months.map((m) => m.visitors),
+          backgroundColor: months.map((m) => (m.label === month ? css("--series-visitors") : css("--series-visitors-dim"))),
+        },
+      ], {
+        tooltipTitle: (j) => monthName(months[j].label),
+        tooltipFooter: (j) => nf.format(months[j].pageviews) + " pages vues",
+      });
+
+      // Clics par mois et par jour
+      const clickSets = (list) => [
+        { label: "App Store", data: list.map((m) => appstore(m.clicks)), backgroundColor: css("--series-appstore") },
+        { label: "Google Play", data: list.map((m) => googleplay(m.clicks)), backgroundColor: css("--series-googleplay") },
+      ];
+      barChart("c-clicks", months.map((m) => shortMonth(m.label)), clickSets(months), {
+        tooltipTitle: (j) => monthName(months[j].label),
+      });
+      $("t-daily-clicks").textContent = "Clics « Télécharger » par jour, " + monthName(month);
+      barChart("c-daily-clicks", days.map((d) => dayLabel(d.label)), clickSets(days), {
+        stacked: true,
+        tooltipTitle: (j) => longDay(days[j].label),
+      });
+
+      // Tableaux
+      const c = cur.clicks;
+      rows("tb-clicks", [
+        ["WineShare (amateurs)", nf.format(c.appstore), nf.format(c.googleplay)],
+        ["WineShare Pro", nf.format(c["appstore-pro"]), nf.format(c["googleplay-pro"])],
+        ["<b>Total</b>", `<b>${nf.format(appstore(c))}</b>`, `<b>${nf.format(googleplay(c))}</b>`],
+      ], "");
+      rows("tb-pages", pages.map(([p, n]) => [esc(pageName(p)), nf.format(n)]), "Aucune page vue ce mois-ci");
+      rows("tb-sources", sources.map(([s, n]) => [s === "direct" ? "Accès direct" : esc(s), nf.format(n)]), "Aucune visite ce mois-ci");
+      $("tb-months").innerHTML = [...months].reverse().map((m) =>
+        `<tr><td>${monthName(m.label)}</td><td>${nf.format(m.visitors)}</td><td>${nf.format(m.pageviews)}</td><td>${nf.format(appstore(m.clicks))}</td><td>${nf.format(googleplay(m.clicks))}</td></tr>`
+      ).join("");
+    }
+
+    // Repeint les graphiques si le mode clair/sombre change
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => data && render());
+  </script>
+</body>
+</html>

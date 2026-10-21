@@ -23,6 +23,14 @@ Variables d'environnement à définir sur Vercel (et dans `.env.local` pour test
 - `CONTACT_TO_EMAIL` : adresse qui reçoit les messages (plusieurs possibles, séparées par des virgules)
 - `CONTACT_FROM_EMAIL` : expéditeur sur le domaine vérifié (par défaut `WineShare <contact@wineshare.fr>`)
 
+## Back-office statistiques (`/admin`)
+Page `public/admin.html`, protégée par mot de passe : visiteurs, pages vues et clics sur les boutons App Store / Google Play, par jour et par mois (12 derniers mois), avec graphiques, pages les plus vues et sources de trafic.
+- **Mesure** : `src/analytics.js` (page vue à chaque changement de page, clic sur chaque bouton de store) → `api/track.js` → base Upstash Redis.
+- **Lecture** : `api/admin/stats.js`, appelée par le back-office avec le mot de passe.
+- **Vie privée** : pas de cookie ni d'adresse IP stockée. Un visiteur est reconnu par une empreinte anonyme qui change chaque jour (il est donc compté une fois par jour).
+- **Variables Vercel** : `ADMIN_PASSWORD` (à créer) ; `WINESHARE_KV_REST_API_URL` et `WINESHARE_KV_REST_API_TOKEN` (ajoutées par Vercel en connectant la base Redis).
+- Dans le back-office, la case « Ne pas compter mes propres visites » exclut l'appareil utilisé.
+
 ## En local
     npm install
     npm run dev       # http://localhost:5173 (le formulaire fonctionne aussi)
