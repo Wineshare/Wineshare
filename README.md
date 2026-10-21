@@ -1,21 +1,29 @@
 # Site WineShare
 
-Site statique (HTML/CSS/JS), même charte que wineshare.fr : vert #476525, or #D9A406, bleu nuit #02132B, fond #FFFCF7, Merriweather Sans + Poppins.
+Site React (Vite + React Router), même charte que wineshare.fr : vert #476525, or #D9A406, bleu nuit #02132B, fond #FFFCF7, Merriweather Sans + Poppins.
+Hébergé sur Vercel. Chaque page est pré-rendue en HTML au build (bon référencement), puis React prend le relais dans le navigateur.
 
-## Pages
-- `index.html` : accueil (présentation de l'app, vidéo motion design, étapes, bandeau pros, blog, FAQ)
-- `etablissements.html` : page pros avec les boutons App Store / Google Play de l'app WineShare Pro
-- `blog.html` + `blog/*.html` : les 12 articles
-- `contact.html` : formulaire branché sur `/api/contact` (même Cloud Function + reCAPTCHA que le site actuel)
+## Pages (`src/pages/`)
+- `Home.jsx` (`/`) : accueil (présentation de l'app, vidéo motion design, étapes, bandeau pros, blog, FAQ)
+- `Pro.jsx` (`/etablissements`) : page pros avec les boutons App Store / Google Play de l'app WineShare Pro
+- `Blog.jsx` (`/blog`) + `Article.jsx` (`/blog/<slug>`) : les 12 articles
+- `Contact.jsx` (`/contact`) : formulaire envoyé à `api/contact.js` (fonction Vercel + Resend)
+
+Les anciennes adresses en `.html` (ex. `/blog.html`) sont redirigées automatiquement vers les nouvelles (`cleanUrls` dans `vercel.json`).
 
 ## À modifier
-- **Liens des stores** (app amateurs et app Pro) : `assets/js/config.js`, appliqués à tous les boutons.
-- **Textes, FAQ, pages** : dans `build.py`, puis lancer `python3 build.py` pour régénérer les pages.
-- **Articles** : `content/articles.txt` (un article par page, séparés par un saut de page), puis `python3 build.py`.
-- **Vidéo** : `assets/video/wineshare-motion.mp4` (+ `poster.jpg`).
+- **Liens des stores** (app amateurs et app Pro) : `src/config.js`, appliqués à tous les boutons.
+- **Textes, FAQ** : dans les composants de `src/pages/` et `src/data/faq.js`.
+- **Articles** : `src/data/articles.txt` (un article par page, séparés par un saut de page) ; catégories dans `src/data/articles.js`. Photo de couverture : `public/assets/img/blog/<slug>.webp`.
+- **Vidéo** : `public/assets/video/wineshare-motion.mp4` (+ `poster.jpg`).
 
-Les liens du pied de page (mentions légales, CGV, confidentialité, suppression de compte, pré-inscription) pointent vers les pages existantes du site actuel : déployer ce dossier au même endroit pour les conserver.
+## Formulaire de contact (Resend)
+Variables d'environnement à définir sur Vercel (et dans `.env.local` pour tester en local, voir `.env.example`) :
+- `RESEND_API_KEY` : clé API Resend
+- `CONTACT_TO_EMAIL` : adresse qui reçoit les messages (plusieurs possibles, séparées par des virgules)
+- `CONTACT_FROM_EMAIL` : expéditeur sur le domaine vérifié (par défaut `WineShare <contact@wineshare.fr>`)
 
-## Aperçu local
-    python3 -m http.server 8765
-puis ouvrir http://localhost:8765
+## En local
+    npm install
+    npm run dev       # http://localhost:5173 (le formulaire fonctionne aussi)
+    npm run build     # génère dist/

@@ -20,6 +20,7 @@ venv/
 .env
 .env.*
 
+
 # Logs et fichiers temporaires
 *.log
 tmp/
@@ -27,3 +28,9 @@ tmp/
 
 # Claude Code (réglages locaux)
 .claude/settings.local.json
+
+# Node / Vite
+node_modules/
+dist/
+dist-server/
+!.env.example
