@@ -1,6 +1,6 @@
 // Pré-rendu : génère un fichier HTML statique par page (SEO, partage sur les réseaux)
 // à partir du build client (dist/) et du build serveur (dist-server/),
-// ainsi que sitemap.xml, robots.txt et llms.txt.
+// ainsi que sitemap.xml, robots.txt, llms.txt et rss.xml.
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -35,6 +35,43 @@ const urls = routes.map((r) => {
 await writeFile(join(dist, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls}\n</urlset>\n`);
 
+// ---------- rss.xml (flux des articles du blog)
+const xml = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const items = [...articles]
+  .sort((a, b) => b.published.localeCompare(a.published) || b.n - a.n)
+  .map((a) => {
+    const link = `${site}/blog/${a.slug}`;
+    return `    <item>
+      <title>${xml(a.title)}</title>
+      <link>${link}</link>
+      <guid isPermaLink="true">${link}</guid>
+      <description>${xml(a.description)}</description>
+      <category>${xml(CATEGORIES[a.cat])}</category>
+      <pubDate>${new Date(a.published).toUTCString()}</pubDate>
+      <dc:creator>L'équipe WineShare</dc:creator>
+      <media:content url="${site}/assets/og/${a.slug}.jpg" medium="image" type="image/jpeg" width="1200" height="630" />
+    </item>`;
+  }).join("\n");
+const lastBuild = articles.reduce((d, a) => (a.published > d ? a.published : d), "");
+await writeFile(join(dist, "rss.xml"), `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>Le blog WineShare</title>
+    <link>${site}/blog</link>
+    <description>Conseils de sommelier, dégustation, accords mets-vins et culture du vin, par l'équipe WineShare.</description>
+    <language>fr-FR</language>
+    <lastBuildDate>${new Date(lastBuild).toUTCString()}</lastBuildDate>
+    <atom:link href="${site}/rss.xml" rel="self" type="application/rss+xml" />
+    <image>
+      <url>${site}/assets/favicon/apple-touch-icon.png</url>
+      <title>Le blog WineShare</title>
+      <link>${site}/blog</link>
+    </image>
+${items}
+  </channel>
+</rss>
+`);
+
 // ---------- robots.txt
 await writeFile(join(dist, "robots.txt"), `User-agent: *
 Allow: /
@@ -58,6 +95,7 @@ await writeFile(join(dist, "llms.txt"), `# WineShare
 - [Établissements](${site}/etablissements) : WineShare Pro, l'application des bars à vin, cavistes et domaines (fiche, carte des vins, promotions, événements)
 - [Blog](${site}/blog) : conseils de sommelier, dégustation, accords mets-vins et culture du vin
 - [Contact](${site}/contact) : écrire à l'équipe WineShare (questions, partenariats, presse)
+- [Flux RSS du blog](${site}/rss.xml)
 
 ## Articles du blog
 
@@ -65,4 +103,4 @@ ${byCat}
 `);
 
 await rm(serverDir, { recursive: true, force: true });
-console.log(`${routes.length + 1} pages pré-rendues, sitemap.xml, robots.txt, llms.txt`);
+console.log(`${routes.length + 1} pages pré-rendues, sitemap.xml, robots.txt, llms.txt, rss.xml`);

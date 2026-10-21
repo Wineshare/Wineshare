@@ -21,7 +21,7 @@ Les anciennes adresses en `.html` (ex. `/blog.html`) sont redirigées automatiqu
 ## SEO
 - Titre, description, canonical, Open Graph et Twitter : `useSeo()` en haut de chaque page (`src/components/Seo.jsx`).
 - Données structurées schema.org : `src/data/schema.js` (Organization, WebSite, MobileApplication, BlogPosting, BreadcrumbList, FAQPage).
-- Générés au build : `sitemap.xml`, `robots.txt`, `llms.txt` (voir `scripts/prerender.mjs`).
+- Générés au build : `sitemap.xml`, `robots.txt`, `llms.txt`, `rss.xml` (flux des articles) (voir `scripts/prerender.mjs`).
 - Redirections 301 des anciennes adresses `.html` et en-têtes HTTP : `vercel.json`.
 
 ## Formulaire de contact (Resend)
