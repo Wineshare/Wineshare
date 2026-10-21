@@ -19,7 +19,6 @@ export default function Footer() {
             <li><Link to="/etablissements">Établissements</Link></li>
             <li><Link to="/blog">Blog</Link></li>
             <li><Link to="/#faq">Questions fréquentes</Link></li>
-            <li><a href="/rss.xml">Flux RSS du blog</a></li>
           </ul>
         </div>
         <div>
