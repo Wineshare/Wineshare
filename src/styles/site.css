@@ -469,3 +469,31 @@ h3 { font-size: var(--fs-h3); letter-spacing: -0.01em; line-height: 1.25; }
 
 /* Texte réservé aux lecteurs d'écran et aux moteurs de recherche */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* ---------- Pages légales (CGU, CGV, mentions légales) ---------- */
+.legal-updated { margin-top: 1rem; font-size: .9rem; color: var(--muted); }
+.legal { padding-bottom: var(--section); }
+.legal-layout { display: grid; grid-template-columns: 17rem minmax(0, 1fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
+.legal-toc { position: sticky; top: 6.5rem; max-height: calc(100vh - 8rem); overflow-y: auto; padding: 1.3rem 1.4rem; background: var(--cream); border-radius: var(--radius-sm); font-size: .88rem; }
+.legal-toc-title { font-family: var(--ff-display); font-weight: 800; color: var(--ink); margin-bottom: .7rem; }
+.legal-toc ol { list-style: none; display: grid; gap: .45rem; }
+.legal-toc a { color: var(--text); text-decoration: none; line-height: 1.35; display: block; }
+.legal-toc a:hover { color: var(--green); }
+.legal-body { max-width: 46rem; font-size: 1rem; }
+.legal-section { scroll-margin-top: 6.5rem; padding-bottom: 1.6rem; }
+.legal-section + .legal-section { border-top: 1px solid var(--line); padding-top: 2rem; }
+.legal-body h2 { font-size: clamp(1.2rem, 1.1rem + .4vw, 1.45rem); margin-bottom: 1rem; letter-spacing: -0.015em; }
+.legal-body h3 { font-size: 1.05rem; margin: 1.4rem 0 .6rem; color: var(--green); }
+.legal-body p { margin-bottom: .9rem; color: var(--text); }
+.legal-body ul { margin: 0 0 1rem 1.2rem; display: grid; gap: .45rem; }
+.legal-body li { padding-left: .2rem; }
+.legal-body li::marker { color: var(--green); }
+.legal-body a { color: var(--green); text-underline-offset: 3px; overflow-wrap: anywhere; }
+.legal-strong { font-weight: 600; color: var(--ink) !important; }
+.legal-others { margin-top: 1.5rem; padding: 1.3rem 1.5rem; background: var(--green-soft); border-radius: var(--radius-sm); display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; align-items: center; }
+.legal-others p { font-weight: 600; color: var(--ink); }
+.legal-others a { color: var(--green); font-weight: 500; }
+@media (max-width: 900px) {
+  .legal-layout { grid-template-columns: 1fr; }
+  .legal-toc { position: static; max-height: none; }
+}

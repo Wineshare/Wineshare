@@ -40,9 +40,10 @@ export default function Footer() {
       <div className="container bottom">
         <span>© 2026 WineShare. L'abus d'alcool est dangereux pour la santé, à consommer avec modération.</span>
         <ul>
-          <li><a href="/mention.html">Mentions légales</a></li>
+          <li><Link to="/mentions-legales">Mentions légales</Link></li>
           <li><a href="/confidentiality.html">Confidentialité</a></li>
-          <li><a href="/cgvu.html">CGV</a></li>
+          <li><Link to="/cgu">CGU</Link></li>
+          <li><Link to="/cgv">CGV</Link></li>
         </ul>
       </div>
     </footer>

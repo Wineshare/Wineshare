@@ -7,6 +7,8 @@
   "trailingSlash": false,
   "redirects": [
     { "source": "/index.html", "destination": "/", "statusCode": 301 },
+    { "source": "/mention(.html)?", "destination": "/mentions-legales", "statusCode": 301 },
+    { "source": "/cgvu(.html)?", "destination": "/cgv", "statusCode": 301 },
     { "source": "/:path((?!assets/).*)\\.html", "destination": "/:path", "statusCode": 301 },
     { "source": "/assets/png/:name(app-mockup).png", "destination": "/assets/png/:name.webp", "statusCode": 301 },
     { "source": "/assets/png/:name(app-icon).jpg", "destination": "/assets/png/:name.webp", "statusCode": 301 },

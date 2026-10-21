@@ -6,6 +6,8 @@ import Blog from "./pages/Blog.jsx";
 import Article from "./pages/Article.jsx";
 import Contact from "./pages/Contact.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import Legal from "./pages/Legal.jsx";
+import { cgu, cgv, mentions } from "./data/legal.js";
 import "./styles/site.css";
 
 export default function App() {
@@ -17,6 +19,9 @@ export default function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<Article />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path={mentions.path} element={<Legal page={mentions} />} />
+        <Route path={cgu.path} element={<Legal page={cgu} />} />
+        <Route path={cgv.path} element={<Legal page={cgv} />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>
