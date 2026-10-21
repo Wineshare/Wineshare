@@ -6,6 +6,8 @@ import PostCard from "../components/PostCard.jsx";
 import { useSeo } from "../components/Seo.jsx";
 import { articles } from "../data/articles.js";
 import { HOME_FAQ } from "../data/faq.js";
+import { APP, ORGANIZATION, WEBSITE, graph } from "../data/schema.js";
+import { JsonLd } from "../components/Seo.jsx";
 
 function Stars({ n = 5 }) {
   return Array.from({ length: n }, (_, i) => <img key={i} src="/assets/svg/icon-star.svg" alt="" />);
@@ -41,7 +43,7 @@ function MotionVideo() {
 
   return (
     <div className="video-frame">
-      <video ref={video} id="motion-video" src="/assets/video/wineshare-motion.mp4" poster="/assets/video/poster.jpg" muted loop playsInline preload="metadata" aria-label="Vidéo de présentation de l'application WineShare"></video>
+      <video ref={video} id="motion-video" src="/assets/video/wineshare-motion.mp4" poster="/assets/video/poster.webp" muted loop playsInline preload="metadata" aria-label="Vidéo de présentation de l'application WineShare"></video>
       <button className="video-sound" id="video-sound" type="button" onClick={toggleSound}>
         {muted ? (
           <svg className="ico-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m23 9-6 6M17 9l6 6"/></svg>
@@ -57,8 +59,8 @@ function MotionVideo() {
 export default function Home() {
   useSeo({
     title: "WineShare | Le réseau social des passionnés de vin",
-    description: "WineShare, le réseau social des passionnés de vin. Partagez vos dégustations, découvrez des bars à vin et cavistes partenaires, " +
-      "suivez leurs événements et gagnez des badges exclusifs.",
+    description: "Le réseau social des passionnés de vin : partagez vos dégustations, découvrez bars à vin et cavistes à Paris, " +
+      "suivez leurs événements et gagnez des badges.",
     path: "/",
   });
   const latest = [articles[3], articles[0], articles[8]];
@@ -74,18 +76,18 @@ export default function Home() {
             <p className="lead reveal d2">Partagez vos dégustations, rencontrez d'autres amateurs, découvrez des établissements partenaires et gagnez des badges exclusifs.</p>
             <p className="hero-cta-label reveal d2">Téléchargez notre application</p>
             <div className="reveal d3">
-              <Stores />
+              <Stores eager />
             </div>
-            <p className="note reveal d3"><img src="/assets/svg/icon-sparkler.svg" alt="" />Pensé avec des sommeliers et des cavistes indépendants.</p>
+            <p className="note reveal d3"><img src="/assets/svg/icon-sparkler.svg" alt="" width="18" height="18" />Pensé avec des sommeliers et des cavistes indépendants.</p>
           </div>
           <div className="hero-visual">
-            <img className="hero-phone" src="/assets/png/app-mockup.png" alt="L'application WineShare, écran Explorer" width="467" height="1022" />
+            <img className="hero-phone" src="/assets/png/app-mockup.webp" alt="L'application WineShare sur iPhone : écran Explorer avec les bars à vin et cavistes autour de soi" width="467" height="1022" fetchPriority="high" />
             <div className="float-card float-card--badge">
-              <span className="ico ico--gold"><img src="/assets/svg/icon-medal-star.svg" alt="" /></span>
+              <span className="ico ico--gold"><img src="/assets/svg/icon-medal-star.svg" alt="" width="32" height="32" /></span>
               <span><strong>Badge débloqué</strong><small>Explorateur • niveau 3</small></span>
             </div>
             <div className="float-card float-card--place">
-              <span className="ico ico--green"><img src="/assets/svg/icon-glass.svg" alt="" /></span>
+              <span className="ico ico--green"><img src="/assets/svg/icon-glass.svg" alt="" width="21" height="32" /></span>
               <span><strong>Rouge ou Blanc</strong><small><Stars />&nbsp;5/5</small></span>
             </div>
           </div>
@@ -102,7 +104,7 @@ export default function Home() {
           </div>
           <div className="pillars">
             <article className="pillar reveal">
-              <div className="pillar-media"><img src="/assets/img/ecran-accueil.webp" alt="Feed WineShare avec une dégustation partagée" loading="lazy" /></div>
+              <div className="pillar-media"><img src="/assets/img/ecran-accueil.webp" alt="Feed WineShare avec une dégustation partagée" width="900" height="1155" loading="lazy" decoding="async" /></div>
               <div className="pillar-body">
                 <span className="pillar-num">01 · PARTAGER</span>
                 <h3>Un feed 100 % vin</h3>
@@ -110,7 +112,7 @@ export default function Home() {
               </div>
             </article>
             <article className="pillar reveal d1">
-              <div className="pillar-media"><img src="/assets/img/fiche-etablissement.webp" alt="Fiche d'un bar à vin dans WineShare" loading="lazy" /></div>
+              <div className="pillar-media"><img src="/assets/img/fiche-etablissement.webp" alt="Fiche d'un bar à vin dans WineShare" width="868" height="1813" loading="lazy" decoding="async" /></div>
               <div className="pillar-body">
                 <span className="pillar-num">02 · DÉCOUVRIR</span>
                 <h3>Les meilleures adresses</h3>
@@ -118,7 +120,7 @@ export default function Home() {
               </div>
             </article>
             <article className="pillar reveal d2">
-              <div className="pillar-media"><img src="/assets/img/ecran-evenements.webp" alt="Agenda des événements WineShare" loading="lazy" /></div>
+              <div className="pillar-media"><img src="/assets/img/ecran-evenements.webp" alt="Agenda des événements WineShare" width="900" height="1155" loading="lazy" decoding="async" /></div>
               <div className="pillar-body">
                 <span className="pillar-num">03 · VIVRE</span>
                 <h3>Des événements à ne pas manquer</h3>
@@ -164,7 +166,7 @@ export default function Home() {
             </ol>
           </div>
           <div className="steps-visual reveal d1">
-            <img src="/assets/img/publication-degustation.jpg" alt="Parcours de publication d'une dégustation dans WineShare" loading="lazy" />
+            <img src="/assets/img/publication-degustation.webp" alt="Parcours de publication d'une dégustation dans WineShare" width="900" height="448" loading="lazy" decoding="async" />
           </div>
         </div>
       </section>
@@ -180,7 +182,7 @@ export default function Home() {
               <Link className="btn btn--light" to="/etablissements">Découvrir WineShare Pro →</Link>
             </div>
             <div className="pro-band-visual">
-              <img src="/assets/img/fiche-partenaire.webp" alt="Fiche d'un établissement partenaire" loading="lazy" />
+              <img src="/assets/img/fiche-partenaire.webp" alt="Fiche d'un établissement partenaire" width="803" height="1958" loading="lazy" decoding="async" />
             </div>
           </div>
         </div>
@@ -219,7 +221,7 @@ export default function Home() {
       <section className="cta-final">
         <div className="container">
           <div className="inner reveal">
-            <img className="app-icon" src="/assets/png/app-icon.jpg" alt="Icône de l'application WineShare" />
+            <img className="app-icon" src="/assets/png/app-icon.webp" alt="Icône de l'application WineShare" width="256" height="256" loading="lazy" />
             <h2>Rejoignez la communauté <span className="accent">WineShare</span></h2>
             <p className="lead">Téléchargez l'application et partagez votre prochaine dégustation.</p>
             <Stores />
@@ -227,6 +229,7 @@ export default function Home() {
         </div>
       </section>
       <FaqSchema items={HOME_FAQ} />
+      <JsonLd data={graph(ORGANIZATION, WEBSITE, APP)} />
     </>
   );
 }

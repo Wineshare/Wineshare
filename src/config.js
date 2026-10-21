@@ -5,7 +5,7 @@
 // ************************************************************
 export const config = {
   appName: "WineShare",
-  siteUrl: "https://wineshare.fr",
+  siteUrl: "https://www.wineshare.fr",
 
   // Application grand public (amateurs)
   appstoreURL: "https://apps.apple.com/fr/app/",                        // TODO : lien App Store WineShare

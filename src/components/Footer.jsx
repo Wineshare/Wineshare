@@ -6,14 +6,14 @@ export default function Footer() {
     <footer className="site-footer">
       <div className="container top">
         <div>
-          <Link className="brand" to="/">
-            <img src="/assets/svg/logo-white.svg" alt="" width="56" height="42" />
+          <Link className="brand" to="/" aria-label="WineShare, accueil">
+            <img src="/assets/svg/logo-white.svg" alt="" width="56" height="42" loading="lazy" />
             <span>WineShare</span>
           </Link>
           <p>Le réseau social des passionnés de vin. Pensé avec des sommeliers et des cavistes indépendants.</p>
         </div>
         <div>
-          <h4>Le site</h4>
+          <h2 className="footer-title">Le site</h2>
           <ul>
             <li><Link to="/">Accueil</Link></li>
             <li><Link to="/etablissements">Établissements</Link></li>
@@ -22,7 +22,7 @@ export default function Footer() {
           </ul>
         </div>
         <div>
-          <h4>L'application</h4>
+          <h2 className="footer-title">L'application</h2>
           <ul>
             <li><StoreLink store="appstore">App Store</StoreLink></li>
             <li><StoreLink store="googleplay">Google Play</StoreLink></li>
@@ -31,7 +31,7 @@ export default function Footer() {
           </ul>
         </div>
         <div>
-          <h4>Aide</h4>
+          <h2 className="footer-title">Aide</h2>
           <ul>
             <li><Link to="/contact">Contactez-nous</Link></li>
             <li><a href="/delete-account.html">Supprimer mon compte</a></li>

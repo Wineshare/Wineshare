@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router";
 import PostCard, { Cover } from "../components/PostCard.jsx";
-import { useSeo } from "../components/Seo.jsx";
+import { JsonLd, useSeo } from "../components/Seo.jsx";
+import { blogPosting, breadcrumb, graph } from "../data/schema.js";
 import { CATEGORIES, getArticle, relatedArticles } from "../data/articles.js";
 import NotFound from "./NotFound.jsx";
 
@@ -21,23 +22,26 @@ function Body({ blocks }) {
 
 function ArticlePage({ article }) {
   useSeo({
-    title: `${article.title} | Blog WineShare`,
-    description: article.excerpt.slice(0, 155),
+    title: `${article.title} | WineShare`,
+    description: article.description,
     path: `/blog/${article.slug}`,
-    image: article.cover,
+    image: `/assets/og/${article.slug}.jpg`,
+    imageAlt: article.title,
+    type: "article",
   });
+  const date = new Date(article.published).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 
   return (
     <>
       <section className="article-hero">
         <div className="container">
-          <p className="breadcrumb"><Link to="/blog">← Tous les articles</Link></p>
-          <div className="post-meta"><span className="tag">{CATEGORIES[article.cat]}</span><span>{article.minutes} min de lecture</span><span>Par l'équipe WineShare</span></div>
+          <nav className="breadcrumb" aria-label="Fil d'Ariane"><Link to="/blog">← Tous les articles</Link></nav>
+          <div className="post-meta"><span className="tag">{CATEGORIES[article.cat]}</span><span>{article.minutes} min de lecture</span><time dateTime={article.published}>{date}</time><span>Par l'équipe WineShare</span></div>
           <h1>{article.title}</h1>
         </div>
       </section>
       <div className="article-cover">
-        <Cover article={article} />
+        <Cover article={article} priority />
       </div>
       <article className="article-body">
         <Body blocks={article.blocks} />
@@ -57,6 +61,10 @@ function ArticlePage({ article }) {
           </div>
         </div>
       </section>
+      <JsonLd data={graph(
+        blogPosting(article),
+        breadcrumb([["Accueil", "/"], ["Blog", "/blog"], [article.title, `/blog/${article.slug}`]]),
+      )} />
     </>
   );
 }

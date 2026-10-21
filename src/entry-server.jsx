@@ -5,6 +5,9 @@ import App from "./App.jsx";
 import { SeoContext, headTags } from "./components/Seo.jsx";
 import { articles } from "./data/articles.js";
 
+export { articles, CATEGORIES } from "./data/articles.js";
+export { config } from "./config.js";
+
 // Toutes les pages à pré-rendre en HTML statique
 export const routes = ["/", "/etablissements", "/blog", "/contact", ...articles.map((a) => `/blog/${a.slug}`)];
 

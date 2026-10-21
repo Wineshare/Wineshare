@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router";
-import { useSeo } from "../components/Seo.jsx";
+import { JsonLd, useSeo } from "../components/Seo.jsx";
+import { breadcrumb, graph } from "../data/schema.js";
 import { config } from "../config.js";
 
 export default function Contact() {
   useSeo({
     title: "Contact | WineShare",
-    description: "Une question sur l'application WineShare, un partenariat ou une demande presse ? Contactez l'équipe WineShare.",
+    description: "Une question sur l'application WineShare, un partenariat ou une demande presse ? Écrivez à l'équipe, nous vous répondons rapidement.",
     path: "/contact",
   });
 
@@ -64,6 +65,7 @@ export default function Contact() {
       <section style={{ paddingBottom: "var(--section)" }}>
         <div className="container contact-layout">
           <form className="form-card reveal" id="contact-form" ref={form} onSubmit={onSubmit} noValidate>
+            <h2 className="sr-only">Envoyer un message</h2>
             <div ref={statusRef} className={`form-status ${status?.type ?? ""}`} id="form-status" role="status" aria-live="polite">{status?.msg}</div>
             <div className="form-grid">
               <div className="field">
@@ -103,6 +105,7 @@ export default function Contact() {
             </div>
           </form>
           <aside className="contact-aside">
+            <h2 className="sr-only">Autres ressources</h2>
             <div className="info-card reveal d1">
               <h3>Questions fréquentes</h3>
               <p>La réponse à votre question s'y trouve peut-être déjà.</p>
@@ -121,6 +124,10 @@ export default function Contact() {
           </aside>
         </div>
       </section>
+      <JsonLd data={graph(
+        { "@type": "ContactPage", name: "Contacter WineShare", url: `${config.siteUrl}/contact`, inLanguage: "fr-FR" },
+        breadcrumb([["Accueil", "/"], ["Contact", "/contact"]]),
+      )} />
     </>
   );
 }

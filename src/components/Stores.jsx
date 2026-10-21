@@ -16,12 +16,14 @@ export function StoreLink({ store, children }) {
   );
 }
 
-export default function Stores({ pro = false }) {
+// eager : boutons visibles dès l'arrivée sur la page (pas de chargement différé)
+export default function Stores({ pro = false, eager = false }) {
   const suffix = pro ? "-pro" : "";
+  const loading = eager ? undefined : "lazy";
   return (
     <div className="stores">
-      <StoreLink store={`googleplay${suffix}`}><img src="/assets/svg/google_play.svg" alt="Disponible sur Google Play" /></StoreLink>
-      <StoreLink store={`appstore${suffix}`}><img src="/assets/svg/app_store.svg" alt="Télécharger dans l'App Store" /></StoreLink>
+      <StoreLink store={`googleplay${suffix}`}><img src="/assets/svg/google_play.svg" alt="Disponible sur Google Play" loading={loading} /></StoreLink>
+      <StoreLink store={`appstore${suffix}`}><img src="/assets/svg/app_store.svg" alt="Télécharger dans l'App Store" loading={loading} /></StoreLink>
     </div>
   );
 }

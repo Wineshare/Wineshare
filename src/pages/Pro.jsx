@@ -3,6 +3,8 @@ import Stores from "../components/Stores.jsx";
 import Faq, { FaqSchema } from "../components/Faq.jsx";
 import { useSeo } from "../components/Seo.jsx";
 import { PRO_FAQ } from "../data/faq.js";
+import { PRO_APP, breadcrumb, graph } from "../data/schema.js";
+import { JsonLd } from "../components/Seo.jsx";
 
 const FEATURE_ICONS = {
   store: <><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0V9z"/><path d="M5 13v7h14v-7"/><path d="M10 20v-4h4v4"/></>,
@@ -25,8 +27,8 @@ const FEATURES = [
 export default function Pro() {
   useSeo({
     title: "WineShare Pro | Pour les bars à vin et cavistes",
-    description: "Bars à vin, cavistes : téléchargez WineShare Pro pour gérer votre fiche, votre carte des vins, vos promotions et vos événements " +
-      "auprès de la communauté WineShare.",
+    description: "Bars à vin, cavistes : avec l'application WineShare Pro, gérez votre fiche, votre carte des vins, vos promotions " +
+      "et vos événements auprès des passionnés.",
     path: "/etablissements",
   });
 
@@ -39,22 +41,22 @@ export default function Pro() {
             <h1 className="reveal d1">Faites découvrir votre cave aux <span className="accent">passionnés de vin</span></h1>
             <p className="lead reveal d2">Bar à vin, caviste, restaurant : avec l'application WineShare Pro, gérez votre présence sur WineShare et attirez une clientèle curieuse, fidèle et amoureuse du vin.</p>
             <div className="pro-app reveal d2">
-              <img src="/assets/png/app-icon.jpg" alt="" />
+              <img src="/assets/png/app-icon.webp" alt="" width="256" height="256" />
               <div><strong>WineShare Pro</strong><span>L'application dédiée aux professionnels</span></div>
             </div>
             <div className="reveal d3">
-              <Stores pro />
+              <Stores pro eager />
             </div>
-            <p className="note reveal d3"><img src="/assets/svg/icon-sparkler.svg" alt="" />Pensé avec des sommeliers et des cavistes indépendants.</p>
+            <p className="note reveal d3"><img src="/assets/svg/icon-sparkler.svg" alt="" width="18" height="18" />Pensé avec des sommeliers et des cavistes indépendants.</p>
           </div>
           <div className="pro-hero-visual reveal d1">
-            <img src="/assets/img/fiche-partenaire.webp" alt="Fiche établissement partenaire dans WineShare" />
+            <img src="/assets/img/fiche-partenaire.webp" alt="Fiche d'un établissement partenaire dans WineShare : photos, carte des vins et événements" width="803" height="1958" fetchPriority="high" />
             <div className="float-card float-card--badge">
-              <span className="ico ico--green"><img src="/assets/svg/icon-glass.svg" alt="" /></span>
+              <span className="ico ico--green"><img src="/assets/svg/icon-glass.svg" alt="" width="21" height="32" /></span>
               <span><strong>Partenaire</strong><small>Badge affiché sur votre fiche</small></span>
             </div>
             <div className="float-card float-card--place">
-              <span className="ico ico--gold"><img src="/assets/svg/icon-medal-star.svg" alt="" /></span>
+              <span className="ico ico--gold"><img src="/assets/svg/icon-medal-star.svg" alt="" width="32" height="32" /></span>
               <span><strong>-30% vins nature</strong><small>Promotion publiée</small></span>
             </div>
           </div>
@@ -82,7 +84,7 @@ export default function Pro() {
 
       <section className="section">
         <div className="container split">
-          <div className="split-visual reveal"><img src="/assets/img/ecran-evenements.webp" alt="Événements d'un établissement partenaire" loading="lazy" /></div>
+          <div className="split-visual reveal"><img src="/assets/img/ecran-evenements.webp" alt="Événements d'un établissement partenaire" width="900" height="1155" loading="lazy" decoding="async" /></div>
           <div>
             <div className="section-head reveal">
               <p className="eyebrow">Démarrer</p>
@@ -120,6 +122,7 @@ export default function Pro() {
         </div>
       </section>
       <FaqSchema items={PRO_FAQ} />
+      <JsonLd data={graph(PRO_APP, breadcrumb([["Accueil", "/"], ["Établissements", "/etablissements"]]))} />
     </>
   );
 }

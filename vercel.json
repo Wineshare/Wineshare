@@ -4,5 +4,32 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/index.html", "destination": "/", "statusCode": 301 },
+    { "source": "/:path((?!assets/).*)\\.html", "destination": "/:path", "statusCode": 301 },
+    { "source": "/assets/png/:name(app-mockup).png", "destination": "/assets/png/:name.webp", "statusCode": 301 },
+    { "source": "/assets/png/:name(app-icon).jpg", "destination": "/assets/png/:name.webp", "statusCode": 301 },
+    { "source": "/assets/img/:name(publication-degustation).jpg", "destination": "/assets/img/:name.webp", "statusCode": 301 },
+    { "source": "/assets/video/poster.jpg", "destination": "/assets/og/wineshare.jpg", "statusCode": 301 }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+      ]
+    },
+    {
+      "source": "/assets/(img|png|svg|og|video|favicon)/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }]
+    },
+    {
+      "source": "/llms.txt",
+      "headers": [{ "key": "Content-Type", "value": "text/plain; charset=utf-8" }]
+    }
+  ]
 }

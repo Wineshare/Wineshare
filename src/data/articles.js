@@ -8,6 +8,9 @@ const ARTICLE_CATS = [
   "regions", "accords", "accords", "degustation", "bases", "culture",
 ];
 
+// Date de publication des articles (mise en ligne du blog)
+const PUBLISHED = "2026-09-29";
+
 export const CATEGORIES = {
   bases: "Les bases",
   degustation: "Dégustation",
@@ -22,6 +25,12 @@ export function slugify(text) {
     .slice(0, 70).replace(/^-+|-+$/g, "");
 }
 
+// Coupe un texte au dernier mot entier avant `max` caractères
+export function truncate(text, max) {
+  if (text.length <= max) return text;
+  return text.slice(0, max - 1).replace(/[\s,;:]+\S*$/, "") + "…";
+}
+
 function parse() {
   const chunks = raw.split("\f").filter((c) => c.trim());
   return chunks.map((chunk, i) => {
@@ -34,12 +43,16 @@ function parse() {
     });
     const words = body.join(" ").split(/\s+/).filter(Boolean).length;
     const slug = slugify(title);
+    const excerpt = body[0];
     return {
       n: i + 1,
       title,
       slug,
       blocks,
-      excerpt: body[0],
+      excerpt,
+      description: truncate(excerpt, 155),
+      words,
+      published: PUBLISHED,
       cat: ARTICLE_CATS[i],
       cover: `/assets/img/blog/${slug}.webp`,
       minutes: Math.max(2, Math.round(words / 220)),

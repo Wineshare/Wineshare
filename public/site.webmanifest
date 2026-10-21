@@ -1,0 +1,14 @@
+{
+  "name": "WineShare",
+  "short_name": "WineShare",
+  "description": "Le réseau social des passionnés de vin",
+  "lang": "fr",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFCF7",
+  "theme_color": "#476525",
+  "icons": [
+    { "src": "/assets/favicon/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/assets/favicon/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

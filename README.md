@@ -14,8 +14,15 @@ Les anciennes adresses en `.html` (ex. `/blog.html`) sont redirigées automatiqu
 ## À modifier
 - **Liens des stores** (app amateurs et app Pro) : `src/config.js`, appliqués à tous les boutons.
 - **Textes, FAQ** : dans les composants de `src/pages/` et `src/data/faq.js`.
-- **Articles** : `src/data/articles.txt` (un article par page, séparés par un saut de page) ; catégories dans `src/data/articles.js`. Photo de couverture : `public/assets/img/blog/<slug>.webp`.
-- **Vidéo** : `public/assets/video/wineshare-motion.mp4` (+ `poster.jpg`).
+- **Articles** : `src/data/articles.txt` (un article par page, séparés par un saut de page) ; catégories dans `src/data/articles.js`. Photo de couverture : `public/assets/img/blog/<slug>.webp`, puis `npm run images`.
+- **Vidéo** : `public/assets/video/wineshare-motion.mp4` (+ `poster.webp`).
+- **Nouvelles images** : déposez-les (PNG, JPG ou WebP) dans `public/assets/img/` puis lancez `npm run images` : conversion en WebP, redimensionnement et images de partage `public/assets/og/` (1200×630).
+
+## SEO
+- Titre, description, canonical, Open Graph et Twitter : `useSeo()` en haut de chaque page (`src/components/Seo.jsx`).
+- Données structurées schema.org : `src/data/schema.js` (Organization, WebSite, MobileApplication, BlogPosting, BreadcrumbList, FAQPage).
+- Générés au build : `sitemap.xml`, `robots.txt`, `llms.txt` (voir `scripts/prerender.mjs`).
+- Redirections 301 des anciennes adresses `.html` et en-têtes HTTP : `vercel.json`.
 
 ## Formulaire de contact (Resend)
 Variables d'environnement à définir sur Vercel (et dans `.env.local` pour tester en local, voir `.env.example`) :
