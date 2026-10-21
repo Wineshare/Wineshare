@@ -37,7 +37,7 @@ export default function Header() {
           <NavLink to="/etablissements" onClick={close}>Établissements</NavLink>
           <NavLink to="/blog" onClick={close}>Blog</NavLink>
           <NavLink to="/contact" onClick={close}>Contact</NavLink>
-          <Link className="btn btn--primary" to="/#telecharger" onClick={close}>Télécharger l'app</Link>
+          <Link className="btn btn--primary" to="/#telecharger" onClick={close}>L'app bientôt disponible</Link>
         </nav>
       </div>
     </header>

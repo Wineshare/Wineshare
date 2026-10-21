@@ -74,7 +74,7 @@ export default function Home() {
             <p className="eyebrow reveal">Bientôt disponible – Paris</p>
             <h1 className="reveal d1">Le réseau social des<br /><span className="accent">passionnés de vin</span></h1>
             <p className="lead reveal d2">Partagez vos dégustations, rencontrez d'autres amateurs, découvrez des établissements partenaires et gagnez des badges exclusifs.</p>
-            <p className="hero-cta-label reveal d2">Téléchargez notre application</p>
+            <p className="hero-cta-label reveal d2">Bientôt sur les stores</p>
             <div className="reveal d3">
               <Stores eager />
             </div>

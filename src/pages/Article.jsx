@@ -50,7 +50,7 @@ function ArticlePage({ article }) {
             <h3>Mettez-le en pratique près de chez vous</h3>
             <p>Bars à vin, cavistes, dégustations : tout est dans l'app WineShare.</p>
           </div>
-          <Link className="btn btn--light" to="/#telecharger">Télécharger l'app</Link>
+          <Link className="btn btn--light" to="/#telecharger">L'app bientôt disponible</Link>
         </div>
       </article>
       <section className="section">
