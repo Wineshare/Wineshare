@@ -519,12 +519,17 @@
       rows("tb-pages", pages.map(([p, n]) => [esc(pageName(p)), nf.format(n)]), "Aucune page vue ce mois-ci");
       const grouped = groupSources(sources);
       rows("tb-sources", grouped.slice(0, 10).map((g) => [esc(g.name) + (g.ai ? '<span class="tag">IA</span>' : ""), nf.format(g.n)]), "Aucune visite ce mois-ci");
+      // Les principaux assistants sont toujours affichés (0 si aucune visite), les autres seulement s'ils ont amené des visites
+      const MAIN_AI = ["ChatGPT", "Claude", "Perplexity", "Gemini", "Copilot", "Le Chat (Mistral)"];
       const ai = grouped.filter((g) => g.ai);
+      const aiList = [
+        ...MAIN_AI.map((name) => ai.find((g) => g.name === name) || { name, n: 0 }),
+        ...ai.filter((g) => !MAIN_AI.includes(g.name)),
+      ].sort((a, b) => b.n - a.n);
       const aiTotal = ai.reduce((t, g) => t + g.n, 0);
       const allTotal = grouped.reduce((t, g) => t + g.n, 0);
-      $("ai-box").innerHTML = aiTotal
-        ? `Assistants IA : <b>${nf.format(aiTotal)}</b> visites (${Math.round((aiTotal / allTotal) * 100)} %)<ul>${ai.map((g) => `<li>${esc(g.name)} : ${nf.format(g.n)}</li>`).join("")}</ul>`
-        : "Assistants IA (ChatGPT, Claude, Perplexity…) : aucune visite ce mois-ci";
+      const pct = allTotal ? ` (${Math.round((aiTotal / allTotal) * 100)} %)` : "";
+      $("ai-box").innerHTML = `Assistants IA : <b>${nf.format(aiTotal)}</b> visites${pct}<ul>${aiList.map((g) => `<li>${esc(g.name)} : ${nf.format(g.n)}</li>`).join("")}</ul>`;
       $("tb-months").innerHTML = [...months].reverse().map((m) =>
         `<tr><td>${monthName(m.label)}</td><td>${nf.format(m.visitors)}</td><td>${nf.format(m.pageviews)}</td><td>${nf.format(appstore(m.clicks))}</td><td>${nf.format(googleplay(m.clicks))}</td></tr>`
       ).join("");
