@@ -23,9 +23,13 @@ function send(data) {
   }
 }
 
-// D'où vient la visite : site d'origine (google.com, instagram.com...) ou "direct"
+// D'où vient la visite : site d'origine (google.com, instagram.com, chatgpt.com...) ou "direct".
+// Les assistants IA ne transmettent pas toujours le site d'origine : ChatGPT, Perplexity, etc.
+// ajoutent souvent ?utm_source=... au lien, qu'on lit en priorité.
 function source() {
   try {
+    const utm = new URLSearchParams(location.search).get("utm_source");
+    if (utm) return utm.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").slice(0, 100);
     const ref = document.referrer && new URL(document.referrer).hostname.replace(/^www\./, "");
     if (ref && ref !== location.hostname.replace(/^www\./, "")) return ref;
   } catch {}

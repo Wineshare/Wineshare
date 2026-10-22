@@ -76,6 +76,6 @@ export async function GET(request) {
     months: monthly,
     days: daily,
     pages: top(toObject(r[rest])),
-    sources: top(toObject(r[rest + 1])),
+    sources: top(toObject(r[rest + 1]), 25),
   });
 }

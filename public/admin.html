@@ -116,6 +116,10 @@
     td:not(:first-child), th:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; padding-left: .8rem; }
     td:first-child { overflow-wrap: anywhere; color: var(--ink); }
     tr:last-child td { border-bottom: 0; }
+    .tag { display: inline-block; margin-left: .4rem; padding: .05rem .45rem; border-radius: 999px; font-size: .7rem; font-weight: 600; vertical-align: 1px; background: var(--brand-soft); color: var(--brand); }
+    .ai-box { background: var(--brand-soft); border-radius: 12px; padding: .75rem .9rem; margin-bottom: .9rem; font-size: .85rem; }
+    .ai-box b { color: var(--ink); font-size: 1.05rem; }
+    .ai-box ul { list-style: none; margin-top: .35rem; display: flex; flex-wrap: wrap; gap: .2rem .9rem; color: var(--text); }
     .empty { color: var(--muted); font-size: .88rem; padding: .5rem 0; }
 
     details summary { cursor: pointer; font-weight: 600; color: var(--ink); }
@@ -218,6 +222,7 @@
         </section>
         <section class="card">
           <header><h2>D'où viennent les visiteurs</h2></header>
+          <div class="ai-box" id="ai-box"></div>
           <table><thead><tr><th>Source</th><th>Visites</th></tr></thead><tbody id="tb-sources"></tbody></table>
         </section>
       </div>
@@ -313,6 +318,47 @@
     const longDay = (d) => new Date(d + "T12:00:00").toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
     const appstore = (c) => c.appstore + c["appstore-pro"];
     const googleplay = (c) => c.googleplay + c["googleplay-pro"];
+    // Sources connues : nom lisible et type (ia = assistant IA)
+    const SOURCES = [
+      [/(^|\.)(chatgpt\.com|chat\.openai\.com|openai\.com)$|^chatgpt$/, "ChatGPT", "ia"],
+      [/(^|\.)claude\.ai$|^claude$|(^|\.)anthropic\.com$/, "Claude", "ia"],
+      [/(^|\.)perplexity\.ai$|^perplexity$/, "Perplexity", "ia"],
+      [/^gemini\.google\.com$|^bard\.google\.com$|^gemini$/, "Gemini", "ia"],
+      [/(^|\.)copilot\.microsoft\.com$|^copilot\.com$|^copilot$/, "Copilot", "ia"],
+      [/^chat\.mistral\.ai$|^mistral$/, "Le Chat (Mistral)", "ia"],
+      [/(^|\.)deepseek\.com$|^deepseek$/, "DeepSeek", "ia"],
+      [/(^|\.)grok\.com$|^grok$/, "Grok", "ia"],
+      [/(^|\.)you\.com$/, "You.com", "ia"],
+      [/(^|\.)google\.[a-z.]+$/, "Google", ""],
+      [/(^|\.)bing\.com$/, "Bing", ""],
+      [/(^|\.)duckduckgo\.com$/, "DuckDuckGo", ""],
+      [/(^|\.)qwant\.com$/, "Qwant", ""],
+      [/(^|\.)ecosia\.org$/, "Ecosia", ""],
+      [/instagram\.com$/, "Instagram", ""],
+      [/(^|\.)(facebook\.com|fb\.com|m\.facebook\.com|l\.facebook\.com)$/, "Facebook", ""],
+      [/(^|\.)tiktok\.com$/, "TikTok", ""],
+      [/(^|\.)linkedin\.com$|^lnkd\.in$/, "LinkedIn", ""],
+      [/(^|\.)(t\.co|x\.com|twitter\.com)$/, "X (Twitter)", ""],
+      [/(^|\.)pinterest\.[a-z.]+$/, "Pinterest", ""],
+      [/(^|\.)youtube\.com$/, "YouTube", ""],
+      [/^direct$/, "Accès direct", ""],
+    ];
+    const sourceInfo = (s) => {
+      const hit = SOURCES.find(([re]) => re.test(s));
+      return hit ? { name: hit[1], ai: hit[2] === "ia" } : { name: s, ai: false };
+    };
+    // Regroupe les sources ayant le même nom (ex. chatgpt.com et chat.openai.com)
+    const groupSources = (list) => {
+      const out = new Map();
+      for (const [s, n] of list) {
+        const { name, ai } = sourceInfo(s);
+        const cur = out.get(name) || { name, ai, n: 0 };
+        cur.n += n;
+        out.set(name, cur);
+      }
+      return [...out.values()].sort((a, b) => b.n - a.n);
+    };
+
     const pageName = (p) => {
       const named = { "/": "Accueil", "/etablissements": "Établissements", "/blog": "Blog", "/contact": "Contact" }[p];
       if (named) return named;
@@ -471,7 +517,14 @@
         ["<b>Total</b>", `<b>${nf.format(appstore(c))}</b>`, `<b>${nf.format(googleplay(c))}</b>`],
       ], "");
       rows("tb-pages", pages.map(([p, n]) => [esc(pageName(p)), nf.format(n)]), "Aucune page vue ce mois-ci");
-      rows("tb-sources", sources.map(([s, n]) => [s === "direct" ? "Accès direct" : esc(s), nf.format(n)]), "Aucune visite ce mois-ci");
+      const grouped = groupSources(sources);
+      rows("tb-sources", grouped.slice(0, 10).map((g) => [esc(g.name) + (g.ai ? '<span class="tag">IA</span>' : ""), nf.format(g.n)]), "Aucune visite ce mois-ci");
+      const ai = grouped.filter((g) => g.ai);
+      const aiTotal = ai.reduce((t, g) => t + g.n, 0);
+      const allTotal = grouped.reduce((t, g) => t + g.n, 0);
+      $("ai-box").innerHTML = aiTotal
+        ? `Assistants IA : <b>${nf.format(aiTotal)}</b> visites (${Math.round((aiTotal / allTotal) * 100)} %)<ul>${ai.map((g) => `<li>${esc(g.name)} : ${nf.format(g.n)}</li>`).join("")}</ul>`
+        : "Assistants IA (ChatGPT, Claude, Perplexity…) : aucune visite ce mois-ci";
       $("tb-months").innerHTML = [...months].reverse().map((m) =>
         `<tr><td>${monthName(m.label)}</td><td>${nf.format(m.visitors)}</td><td>${nf.format(m.pageviews)}</td><td>${nf.format(appstore(m.clicks))}</td><td>${nf.format(googleplay(m.clicks))}</td></tr>`
       ).join("");
