@@ -77,7 +77,7 @@ export default function Home() {
             <p className="note reveal d3"><img src="/assets/svg/icon-sparkler.svg" alt="" width="18" height="18" />Pensé avec des sommeliers et des cavistes indépendants.</p>
           </div>
           <div className="hero-visual">
-            <img className="hero-mockup" src="/assets/png/app-explorer.webp" alt="L'application WineShare sur iPhone : écran Explorer avec les dernières dégustations et les établissements référencés, badge « Explorateur niveau 3 » débloqué" width="842" height="786" fetchPriority="high" />
+            <img className="hero-mockup" src="/assets/png/app-explorer.webp" alt="L'application WineShare sur iPhone : écran Explorer avec les dernières dégustations et les établissements référencés, badge « Explorateur niveau 3 » débloqué" width="1924" height="1882" fetchPriority="high" />
           </div>
         </div>
       </section>

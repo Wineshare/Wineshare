@@ -175,8 +175,10 @@ h3 { font-size: var(--fs-h3); letter-spacing: -0.01em; line-height: 1.25; }
 .float-card--place { bottom: 16%; right: -8%; animation: float 6.5s ease-in-out infinite 1.4s; }
 
 /* Maquette de l'app (téléphone + cartes déjà intégrées dans l'image) */
-.hero-mockup { position: relative; width: min(44rem, 122%, calc((100svh - 7rem) * 842 / 786)); max-width: none; min-width: 18rem; margin-right: -6%; filter: drop-shadow(0 30px 40px rgba(2, 19, 43, .18)); animation: float 7s ease-in-out infinite; }
-@media (max-width: 900px) { .hero-mockup { width: min(36rem, 100%); margin-right: 0; } }
+.hero-visual:has(.hero-mockup) { justify-content: flex-start; }
+.hero-mockup { position: relative; flex: none; width: min(44rem, 128%, calc((100svh - 6rem) * 1924 / 1882)); max-width: none; min-width: 18rem; margin-left: -3%; filter: drop-shadow(0 30px 40px rgba(2, 19, 43, .18)); animation: float 7s ease-in-out infinite; }
+@media (min-width: 901px) and (max-width: 1439px) { .hero-mockup { width: min(44rem, 108%, calc((100svh - 6rem) * 1924 / 1882)); } }
+@media (max-width: 900px) { .hero-visual:has(.hero-mockup) { justify-content: center; } .hero-mockup { width: min(36rem, 100%); margin-left: 0; } }
 
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
