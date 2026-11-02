@@ -9,10 +9,6 @@ import { HOME_FAQ } from "../data/faq.js";
 import { APP, ORGANIZATION, WEBSITE, graph } from "../data/schema.js";
 import { JsonLd } from "../components/Seo.jsx";
 
-function Stars({ n = 5 }) {
-  return Array.from({ length: n }, (_, i) => <img key={i} src="/assets/svg/icon-star.svg" alt="" />);
-}
-
 function MotionVideo() {
   const video = useRef(null);
   const [muted, setMuted] = useState(true);
@@ -81,15 +77,7 @@ export default function Home() {
             <p className="note reveal d3"><img src="/assets/svg/icon-sparkler.svg" alt="" width="18" height="18" />Pensé avec des sommeliers et des cavistes indépendants.</p>
           </div>
           <div className="hero-visual">
-            <img className="hero-phone" src="/assets/png/app-mockup.webp" alt="L'application WineShare sur iPhone : écran Explorer avec les bars à vin et cavistes autour de soi" width="467" height="1022" fetchPriority="high" />
-            <div className="float-card float-card--badge">
-              <span className="ico ico--gold"><img src="/assets/svg/icon-medal-star.svg" alt="" width="32" height="32" /></span>
-              <span><strong>Badge débloqué</strong><small>Explorateur • niveau 3</small></span>
-            </div>
-            <div className="float-card float-card--place">
-              <span className="ico ico--green"><img src="/assets/svg/icon-glass.svg" alt="" width="21" height="32" /></span>
-              <span><strong>Rouge ou Blanc</strong><small><Stars />&nbsp;5/5</small></span>
-            </div>
+            <img className="hero-mockup" src="/assets/png/app-explorer.webp" alt="L'application WineShare sur iPhone : écran Explorer avec les dernières dégustations et les établissements référencés, badge « Explorateur niveau 3 » débloqué" width="842" height="786" fetchPriority="high" />
           </div>
         </div>
       </section>
